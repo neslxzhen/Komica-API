@@ -3,6 +3,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import self.nesl.kapi.gson.KThreadAdapter;
 import self.nesl.kapi.parser.HostParser;
+import self.nesl.kapi.parser.komica.KomicaHostParser;
 import self.nesl.kapi.po.Host;
 import self.nesl.kapi.po.KThread;
 import java.io.File;
@@ -55,7 +56,7 @@ public class XmlDB {
 
     public static void writeHosts(){
         for (HostParser hostParser:new HostParser[]{
-
+                new KomicaHostParser()
         }){
             writeHost(hostParser.parse());
         }
