@@ -1,9 +1,16 @@
 package self.nesl.kapi.parser;
 import org.jsoup.nodes.Element;
+import self.nesl.kapi.parser.komica.KomicaBoardsParser;
+import self.nesl.kapi.parser.komica.sora.SoraPostParser;
+import self.nesl.kapi.parser.komica.sora.SoraThreadParser;
 import self.nesl.kapi.utils.UrlUtils;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+
+import static self.nesl.kapi.utils.Utils.print;
+
 public class ParserFactory {
     public final static String MAP_HOST_COLUMN = "host";
     public final static String MAP_PARSER_COLUMN = "parser";
@@ -11,12 +18,12 @@ public class ParserFactory {
     public final static String MAP_PAGE_URL_COLUMN = "pageUrl";
 
     private String url;
-    private String host;
     private Class<? extends Parser> parser;
+    private String host;
 
     public ParserFactory(String url) {
         this.url = url;
-        this.host = new UrlUtils(url).getHost();
+        host = new UrlUtils(url).getHost();
         this.parser=(Class<? extends Parser>) getParser(host,MAP_PARSER_COLUMN);
     }
 
@@ -29,6 +36,15 @@ public class ParserFactory {
             );
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Parser getBoardsParser(Element element) {
+        switch (url) {
+            case "komica.org":
+            case "komica2.net":
+                return new KomicaBoardsParser(url, element);
         }
         return null;
     }
@@ -46,6 +62,10 @@ public class ParserFactory {
 
     private static Object getParserOther(Class<? extends Parser> parser, String column){
         for (Map map:new Map[]{
+                new HashMap<String, Object>() {{
+                    put(MAP_PARSER_COLUMN, SoraPostParser.class);
+                    put(MAP_PATH_COLUMN,"/pixmicat.php?res=");
+                }},
         }){
             if(map.get(MAP_PARSER_COLUMN).equals(parser)){
                 return map.get(column);
@@ -56,6 +76,21 @@ public class ParserFactory {
 
     private static Object getParser(String host,String column) {
         for (Map map:new Map[]{
+                new HashMap<String, Object>(){{
+                    put(MAP_PARSER_COLUMN, SoraThreadParser.class);
+                    put(MAP_PAGE_URL_COLUMN, "{{url}}"+ "/" + "{{page}}" + ".htm");
+                    put(MAP_HOST_COLUMN, new String[]{
+                            "komica.org",  // 綜合、新番捏他、動畫
+                            "komica.dbfoxtw.me",  // 人外
+                            "anzuchang.com",  // Idolmaster
+                            "komica.yucie.net", // 格鬥遊戲
+                            "kagaminerin.org", // 3D STG
+                            "strange-komica.com",  // 魔物獵人
+                            "gzone-anime.info", // TYPE-MOON
+
+                            "komica2.net", // komica2
+                    });
+                }},
                 new HashMap<String, Object>(){{
                     put(MAP_PARSER_COLUMN, null);
                     put(MAP_PAGE_URL_COLUMN, null);
