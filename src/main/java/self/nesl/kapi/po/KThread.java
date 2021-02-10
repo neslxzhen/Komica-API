@@ -4,9 +4,7 @@ import org.jsoup.nodes.Element;
 import self.nesl.kapi.gson.KThreadAdapter;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static self.nesl.kapi.utils.Utils.print;
@@ -27,7 +25,7 @@ public class KThread extends Post{
     }
 
     public void addAll(ArrayList<KThread> list) {
-        for (KThread thread:list) {
+        for (KThread thread:new HashSet<KThread>(){{addAll(list);}}) {
             ArrayList arr=thread.getParents();
             if (arr==null|| arr.size()==0) {
                 replyTree.add(thread);
