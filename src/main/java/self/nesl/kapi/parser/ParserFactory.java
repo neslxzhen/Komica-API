@@ -1,16 +1,14 @@
 package self.nesl.kapi.parser;
 import org.jsoup.nodes.Element;
 import self.nesl.kapi.parser.komica.KomicaBoardsParser;
+import self.nesl.kapi.parser.komica._2cat._2catPostParser;
+import self.nesl.kapi.parser.komica._2cat._2catThreadParser;
 import self.nesl.kapi.parser.komica.sora.SoraPostParser;
 import self.nesl.kapi.parser.komica.sora.SoraThreadParser;
 import self.nesl.kapi.utils.UrlUtils;
-
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
-
-import static self.nesl.kapi.utils.Utils.print;
-
 public class ParserFactory {
     public final static String MAP_HOST_COLUMN = "host";
     public final static String MAP_PARSER_COLUMN = "parser";
@@ -66,6 +64,10 @@ public class ParserFactory {
                     put(MAP_PARSER_COLUMN, SoraPostParser.class);
                     put(MAP_PATH_COLUMN,"/pixmicat.php?res=");
                 }},
+                new HashMap<String, Object>() {{
+                    put(MAP_PARSER_COLUMN, _2catPostParser.class);
+                    put(MAP_PATH_COLUMN, "/?res=");
+                }},
         }){
             if(map.get(MAP_PARSER_COLUMN).equals(parser)){
                 return map.get(column);
@@ -89,6 +91,13 @@ public class ParserFactory {
                             "gzone-anime.info", // TYPE-MOON
 
                             "komica2.net", // komica2
+                    });
+                }},
+                new HashMap<String, Object>(){{
+                    put(MAP_PARSER_COLUMN, _2catThreadParser.class);
+                    put(MAP_PAGE_URL_COLUMN, "{{url}}"+ "/?page=" + "{{page}}");
+                    put(MAP_HOST_COLUMN, new String[]{
+                            "2cat.org",  // 碧藍幻想
                     });
                 }},
                 new HashMap<String, Object>(){{
