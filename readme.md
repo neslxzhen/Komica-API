@@ -1,5 +1,14 @@
+# Komica-API
+[KomicaViewer] 的後臺實驗場，使用 `SpringBoot` and `Tomcat` 搭建。
+
+
 進入點: KapiApplication.main()
 
- - 新增`Host`: 修改`XmlDB.writeHosts()`
- - 新增`Thread Parser`: 修改`private ParserFactory.getParser()`
- - 新稱`Post Parser`: 修改`private ParserFactory.getParserOther()`
+## Todo
+ - [X] 解析功能
+ - [ ] 部署至 Heroku
+ - [ ] 將解析功能搬回 [KomicaViewer]
+ - [ ] 實作 User Account, history 等功能
+
+
+[KomicaViewer]: https://github.com/neslxzhen/KomicaViewer
